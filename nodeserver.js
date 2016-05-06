@@ -10,7 +10,9 @@ var client = new Client();
 
 var app = express();
 
-var port = 8080;
+// set the port of our application
+// process.env.PORT lets the port be set by Heroku
+var port = process.env.PORT || 8080;
 
 //mangoose connect
 mongoose.connect('mongodb://dbuser:1234@ds015892.mlab.com:15892/cmpe235');
@@ -28,7 +30,7 @@ var RegSchema = mongoose.Schema({
     phoneNum: String,
     username: String,
     password: String
-}, { collection: 'student_credentials' });
+}, { collection: 'teacher_credentials' });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,7 +44,7 @@ app.post('/login', function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var result = false;
-    var collection = db.collection('student_credentials');
+    var collection = db.collection('teacher_credentials');
     collection.findOne({ username: username, password: password }, function (err, user) {
         if (err) {
             return res.json("{status : error}");
@@ -146,7 +148,7 @@ app.post('/savestudentgrade', function (req, res) {
     });
 
 
-app.listen(port, function () {
+app.listen(port, function() {
     console.log('Our app is running on http://localhost:' + port);
 });
 console.log('Server Started on 8235');
