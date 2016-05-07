@@ -1,0 +1,39 @@
+
+h1 {
+  font-size: 2.747em;
+  text-align: center;
+}
+h2 {
+  font-size: 0.874em;
+  text-align: center;
+}
+h3 {
+  font-size:1.229em;
+  text-align: center;
+}
+
+body {
+  font-size:100%; 
+  line-height:1.5;
+  font-family: 'Merriweather', Georgia, 'Times New Roman', Times, serif;
+}
+
+section {
+  max-width:34em;
+  margin:auto;
+  padding:0 1em;
+}
+
+ 
+@media screen and (max-width: 25em) {
+  body { font-size: 90%;}
+}
+  
+.cols { 
+  column-width: 25em;
+  column-gap: 5em;
+}
+
+.heading_class {
+  text-align: center;
+}

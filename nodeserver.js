@@ -146,6 +146,30 @@ app.post('/savestudentgrade', function (req, res) {
             res.json("{status : success}");
         });
     });
+    
+    app.get('/getgreensheet', function (req, res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    console.log('inside getgreensheet');
+    
+    // var collection = db.collection('student_details');
+    // collection.updateOne(
+    //     { 'ID': studentId },
+    //     { $set: { "Grade": studentgrade } },
+    //     function (err, results) {
+    //         if (err) {
+    //             console.log('error at savestudentgrade update');
+    //             res.json("{status : failure}");
+    //         }
+    //         console.log('success');
+    //         res.json("{status : success}");
+    //     });
+    
+    // res.sendFile('public/index1.html' , { root : __dirname});
+    res.sendFile("./responsiveGreensheet.html", { root : __dirname});
+    });
 
 
 app.listen(port, function() {
