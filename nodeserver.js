@@ -50,7 +50,7 @@ app.post('/login', function (req, res) {
             return res.json("{status : error}");
         }
         if (!user) return res.json("{status : could not find the user}");
-        return res.json("{status : logged in}"); 
+        return res.json("{status : logged in}");
     });
 });
 
@@ -73,9 +73,9 @@ app.post('/signup', function (req, res, next) {
 
     UserReg.create(user, function (err, newUser) {
         console.log('inside signup create');
-        if (err) { 
+        if (err) {
             console.log('error');
-            res.json("{status :signup failure error}"); 
+            res.json("{status :signup failure error}");
         };
         return res.json("{status : signup success}");
     });
@@ -145,34 +145,24 @@ app.post('/savestudentgrade', function (req, res) {
             console.log('success');
             res.json("{status : success}");
         });
-    });
-    
-    app.get('/getgreensheet', function (req, res) {
+});
+
+app.get('/getgreensheet/:coursename', function (req, res) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     console.log('inside getgreensheet');
-    
-    // var collection = db.collection('student_details');
-    // collection.updateOne(
-    //     { 'ID': studentId },
-    //     { $set: { "Grade": studentgrade } },
-    //     function (err, results) {
-    //         if (err) {
-    //             console.log('error at savestudentgrade update');
-    //             res.json("{status : failure}");
-    //         }
-    //         console.log('success');
-    //         res.json("{status : success}");
-    //     });
-    
-    // res.sendFile('public/index1.html' , { root : __dirname});
-    res.sendFile("./responsiveGreensheet.html", { root : __dirname});
-    });
+    if (coursename == 'cmpe285') {
+        res.sendFile("./cmpe285.html", { root: __dirname });
+    }
+    else if (coursename == 'cmpe235') {
+        res.sendFile("./cmpe235.html", { root: __dirname });
+    }
+});
 
 
-app.listen(port, function() {
+app.listen(port, function () {
     console.log('Our app is running on http://localhost:' + port);
 });
 console.log('Server Started on 8235');
