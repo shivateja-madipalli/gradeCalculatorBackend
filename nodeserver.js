@@ -64,7 +64,7 @@ app.post('/signup', function (req, res, next) {
     // Model
     var UserReg = mongoose.model('UserReg', RegSchema);
     var user = {
-        Name: req.body.name,
+        name: req.body.name,
         phoneNum: req.body.phone_number,
         username: req.body.username,
         password: req.body.password
