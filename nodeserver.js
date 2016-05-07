@@ -153,6 +153,7 @@ app.get('/getgreensheet/:coursename', function (req, res) {
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     console.log('inside getgreensheet');
+    coursename = req.params.coursename;
     if (coursename == 'cmpe285') {
         res.sendFile("./cmpe285.html", { root: __dirname });
     }
