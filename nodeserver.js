@@ -5,6 +5,7 @@ var Client = require("node-rest-client").Client;
 var mongoose = require("mongoose");
 var MongoClient = require('mongodb').MongoClient;
 var bodyParser = require('body-parser');
+var authy = require('authy')("NTcGeRu0Jgiby5KIwf2HqzZF32oYft5G");
 
 var client = new Client();
 
@@ -29,7 +30,8 @@ var RegSchema = mongoose.Schema({
     name: String,
     phoneNum: String,
     username: String,
-    password: String
+    password: String,
+    authyId: String
 }, { collection: 'teacher_credentials' });
 
 app.use(bodyParser.json());
@@ -49,9 +51,19 @@ app.post('/login', function (req, res) {
         if (err) {
             return res.json("{status : error}");
         }
-        if (!user) return res.status(401).json("{status : could not find the user}");
-        return res.status(200).json("{status : logged in}");
-        
+        if (!user) {
+            return res.status(401).json("{status : could not find the user}")
+        };
+        //working on authy stuff
+
+
+
+        authy._request("post", "/onetouch/json/users/" + user.authyId + "/approval_requests", {
+            "details[Email Address]": username,
+            "message": "Message Fuck the SHIT"
+        }, callback);
+        //return res.status(200).json("{status : logged in}");
+
     });
 });
 
@@ -72,13 +84,32 @@ app.post('/signup', function (req, res, next) {
     };
     console.log('inside signup after user def');
 
-    UserReg.create(user, function (err, newUser) {
-        console.log('inside signup create');
+
+    //creating auth id from API CALL
+
+    authy.register_user(user.username, user.phoneNum, '+1', function (err, response) {
         if (err) {
-            console.log('error');
-            res.json("{status :signup failure error}");
-        };
-        return res.json("{status : signup success}");
+            //response.json(err);
+            console.log(err);
+            return;
+        }
+        user.authyId = response.user.id;
+        
+        console.log('whole user Obj: ' + JSON.stringify(user));
+        
+        UserReg.create(user, function (err, newUser) {
+            console.log('inside signup create');
+            if (err) {
+                console.log('error');
+                res.json("{status :signup failure error}");
+            };
+            return res.json("{status : signup success}");
+        });
+        
+        // self.save(function (err, doc) {
+        //     if (err || !doc) return next(err);
+        //     self = doc;
+        // });
     });
 });
 
