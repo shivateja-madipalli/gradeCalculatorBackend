@@ -49,8 +49,9 @@ app.post('/login', function (req, res) {
         if (err) {
             return res.json("{status : error}");
         }
-        if (!user) return res.json("{status : could not find the user}");
-        return res.json("{status : logged in}");
+        if (!user) return res.status(401).json("{status : could not find the user}");
+        return res.status(200).json("{status : logged in}");
+        
     });
 });
 
