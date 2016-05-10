@@ -56,13 +56,11 @@ app.post('/login', function (req, res) {
         };
         //working on authy stuff
 
-
-
-        authy._request("post", "/onetouch/json/users/" + user.authyId + "/approval_requests", {
-            "details[Email Address]": username,
-            "message": "Message Fuck the SHIT"
-        }, callback);
-        //return res.status(200).json("{status : logged in}");
+        console.log('authy id: ' + user.authyId);
+        authy.request_sms(user.authyId, function(err, response) {
+          console.log('response from authy: ' + JSON.stringify(response));
+          return res.status(200).json("{status : success}");
+        });
 
     });
 });
@@ -94,9 +92,9 @@ app.post('/signup', function (req, res, next) {
             return;
         }
         user.authyId = response.user.id;
-        
+
         console.log('whole user Obj: ' + JSON.stringify(user));
-        
+
         UserReg.create(user, function (err, newUser) {
             console.log('inside signup create');
             if (err) {
@@ -105,7 +103,7 @@ app.post('/signup', function (req, res, next) {
             };
             return res.json("{status : signup success}");
         });
-        
+
         // self.save(function (err, doc) {
         //     if (err || !doc) return next(err);
         //     self = doc;
@@ -156,7 +154,7 @@ app.get('/getallstudents', function (req, res) {
     });
 });
 
-//params: student id and grade 
+//params: student id and grade
 app.post('/savestudentgrade', function (req, res) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -194,6 +192,45 @@ app.get('/getgreensheet/:coursename', function (req, res) {
     }
 });
 
+app.post('/sendOtp', function(req,res){
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  console.log('inside sendOtp');
+  var otp_Code = req.body.otpCode;
+  var loggedIn_Uname = req.body.uName;
+  console.log('otp_Code: ' + otp_Code);
+  console.log('loggedIn_Uname: ' + loggedIn_Uname);
+
+  // res.status(200).json("{status : success}");
+
+  var collection = db.collection('teacher_credentials');
+
+  collection.findOne({ username: loggedIn_Uname}, function (err, user) {
+    authy.verify(user.authyId, otp_Code, function(err, response) {
+      if(!err) {
+        console.log('response from otp: ' + JSON.stringify(response));
+        res.status(200).json("{status : success}");
+      }
+      else {
+        res.status(401).json("{status : error}");
+      }
+    });
+  });
+
+  // collection.updateOne(
+  //     { 'ID': studentId },
+  //     { $set: { "Grade": studentgrade } },
+  //     function (err, results) {
+  //         if (err) {
+  //             console.log('error at savestudentgrade update');
+  //             res.json("{status : failure}");
+  //         }
+  //         console.log('success');
+  //         res.json("{status : success}");
+  //     });
+});
 
 app.listen(port, function () {
     console.log('Our app is running on http://localhost:' + port);
