@@ -9,6 +9,7 @@
   "author": "Shivateja Madipalli",
   "license": "ISC",
   "dependencies": {
+    "authy": "^1.1.2",
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "mongodb": "^2.1.7",
