@@ -38,11 +38,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+app.all(function(req, res) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+});
+
 app.post('/login', function (req, res) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    // res.header('Access-Control-Allow-Origin', '*');
+    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     var username = req.body.username;
     var password = req.body.password;
     var result = false;
@@ -66,10 +73,10 @@ app.post('/login', function (req, res) {
 });
 
 app.post('/signup', function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    // res.header('Access-Control-Allow-Origin', '*');
+    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     console.log('inside signup');
 
     // Model
@@ -114,10 +121,10 @@ app.post('/signup', function (req, res, next) {
 //parameter: studentid
 //returns a json with individual student info
 app.post('/getstudent', function (req, res) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    // res.header('Access-Control-Allow-Origin', '*');
+    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     console.log('inside getstudent');
     var studentId = req.body.studentid;
     // var result = false;
@@ -135,10 +142,10 @@ app.post('/getstudent', function (req, res) {
 // no params
 // get all the student details as json
 app.get('/getallstudents', function (req, res) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    // res.header('Access-Control-Allow-Origin', '*');
+    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     console.log('inside getstudent');
     // var studentId = req.body.studentid;
     // var result = false;
@@ -154,12 +161,32 @@ app.get('/getallstudents', function (req, res) {
     });
 });
 
+
+app.post('/deleteAllGrades', function(req, res){
+  console.log('inside deleteAllGrades');
+  var collection = db.collection('student_details');
+  collection.find().toArray(function (err, result) {
+      if (err) {
+          console.log('error in getallstudents');
+          res.status(500).json("{status : error}");
+      }
+      else {
+          for(var i=0;i<result.length;i++) {
+            console.log(result[i]["Grade"]);
+            result[i]["Grade"] = "No Grade";
+          }
+      }
+      res.status(200).json("{status : success}");
+  });
+});
+
+
 //params: student id and grade
 app.post('/savestudentgrade', function (req, res) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    // res.header('Access-Control-Allow-Origin', '*');
+    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     console.log('inside getstudent');
     var studentId = req.body.studentid;
     var studentgrade = req.body.grade;
@@ -178,10 +205,10 @@ app.post('/savestudentgrade', function (req, res) {
 });
 
 app.get('/getgreensheet/:coursename', function (req, res) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    // res.header('Access-Control-Allow-Origin', '*');
+    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    // res.header('Access-Control-Allow-Headers', 'Content-Type');
     console.log('inside getgreensheet');
     coursename = req.params.coursename;
     if (coursename == 'cmpe285') {
@@ -193,10 +220,10 @@ app.get('/getgreensheet/:coursename', function (req, res) {
 });
 
 app.post('/sendOtp', function(req,res){
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  // res.header('Access-Control-Allow-Origin', '*');
+  // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  // res.header('Access-Control-Allow-Headers', 'Content-Type');
   console.log('inside sendOtp');
   var otp_Code = req.body.otpCode;
   var loggedIn_Uname = req.body.uName;
